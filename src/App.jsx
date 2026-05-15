@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { login, logout, getUser, isAuthenticated } from './api';
 import TrucksManager from './components/TrucksManager';
 import PagesManager from './components/PagesManager';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => isAuthenticated() ? getUser() : null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('trucks');
-
-  useEffect(() => {
-    if (isAuthenticated()) {
-      setUser(getUser());
-    }
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

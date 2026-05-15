@@ -34,21 +34,22 @@ function TrucksManager() {
   const [formData, setFormData] = useState(emptyTruck);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    loadTrucks();
-  }, []);
-
   const loadTrucks = async () => {
     try {
       setLoading(true);
       const data = await getTrucks();
       setTrucks(data);
-    } catch (err) {
+    } catch {
       setError('Error al cargar camiones');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadTrucks();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +94,7 @@ function TrucksManager() {
     try {
       await deleteTruck(id);
       await loadTrucks();
-    } catch (err) {
+    } catch {
       setError('Error al eliminar');
     }
   };
