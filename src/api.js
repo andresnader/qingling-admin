@@ -34,14 +34,14 @@ export const getUser = () => {
 
 export const isAuthenticated = () => !!localStorage.getItem('token');
 
-export const getTrucks = () => api.get('/trucks').then(r => r.data);
-export const getTruck = (slug) => api.get(`/trucks/${slug}`).then(r => r.data);
-export const createTruck = (data) => api.post('/trucks', data).then(r => r.data);
-export const updateTruck = (id, data) => api.put(`/trucks/${id}`, data).then(r => r.data);
+export const getTrucks = () => api.get('/trucks').then(r => r.data.trucks || []);
+export const getTruck = (slug) => api.get(`/trucks/${slug}`).then(r => r.data.truck);
+export const createTruck = (data) => api.post('/trucks', data).then(r => r.data.truck);
+export const updateTruck = (id, data) => api.put(`/trucks/${id}`, data).then(r => r.data.truck);
 export const deleteTruck = (id) => api.delete(`/trucks/${id}`).then(r => r.data);
 
-export const getPages = () => api.get('/pages').then(r => r.data);
-export const getPage = (slug) => api.get(`/pages/${slug}`).then(r => r.data);
-export const updatePage = (slug, data) => api.put(`/pages/${slug}`, data).then(r => r.data);
+export const getPages = () => api.get('/pages').then(r => r.data.pages || []);
+export const getPage = (slug) => api.get(`/pages/${slug}`).then(r => r.data.page);
+export const updatePage = (slug, data) => api.put(`/pages/${slug}`, data).then(r => r.data.page);
 
 export default api;
