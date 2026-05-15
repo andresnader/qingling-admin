@@ -19,7 +19,12 @@ function App() {
       const data = await login(email, password);
       setUser(data.user);
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al iniciar sesión');
+      const apiError = err.response?.data?.error;
+      setError(
+        typeof apiError === 'string'
+          ? apiError
+          : apiError?.message || 'Error al iniciar sesión'
+      );
     } finally {
       setLoading(false);
     }
@@ -44,13 +49,13 @@ function App() {
             {error && <div className="error-message">{error}</div>}
             <div className="form-group">
               <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@qingling.com"
-                required
-              />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@corasa.com"
+                  required
+                />
             </div>
             <div className="form-group">
               <label>Contraseña</label>
