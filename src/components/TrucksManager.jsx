@@ -6,7 +6,7 @@ const emptyTruck = {
   slug: '',
   tagline: '',
   description: '',
-  category: 'light',
+  category: 'LIVIANO',
   image: '',
   gallery: [],
   specs: {
@@ -20,7 +20,6 @@ const emptyTruck = {
     weight: '',
   },
   features: [],
-  price: '',
   featured: false,
   active: true,
 };
@@ -77,12 +76,11 @@ function TrucksManager() {
       slug: truck.slug || '',
       tagline: truck.tagline || '',
       description: truck.description || '',
-      category: truck.category || 'light',
+      category: truck.category || 'LIVIANO',
       image: truck.image || '',
       gallery: truck.gallery || [],
       specs: truck.specs || emptyTruck.specs,
       features: truck.features || [],
-      price: truck.price || '',
       featured: truck.featured || false,
       active: truck.active !== false,
     });
@@ -176,19 +174,12 @@ function TrucksManager() {
                     value={formData.category}
                     onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
                   >
-                    <option value="light">Ligero</option>
-                    <option value="medium">Mediano</option>
-                    <option value="heavy">Pesado</option>
+                    <option value="LIVIANO">Livianos</option>
+                    <option value="MEDIANO">Medianos</option>
+                    <option value="TRACTO">Tractos</option>
+                    <option value="BUS">Buses</option>
+                    <option value="ESPECIAL">Especiales</option>
                   </select>
-                </div>
-                <div className="form-group">
-                  <label>Precio (USD)</label>
-                  <input
-                    type="text"
-                    value={formData.price}
-                    onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                    placeholder="Desde $0,000"
-                  />
                 </div>
                 <div className="form-group">
                   <label>URL Imagen principal</label>
