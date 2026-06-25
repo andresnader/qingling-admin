@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Save, Phone, MapPin, MessageCircle, Mail, Clock, Share2, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { getSiteConfig, updateSiteConfig, getToken } from '../api';
+import { getSiteConfig, updateSiteConfig } from '../api';
 
 const SECTIONS = [
   {
@@ -81,6 +81,19 @@ const SECTIONS = [
       { key: 'footerCopyright', label: 'Copyright', placeholder: '© 2026 CORASA — QINGLING Motors Ecuador. Todos los derechos reservados.', multiline: true },
     ],
   },
+  {
+    id: 'labels',
+    icon: FileText,
+    title: 'Etiquetas y botones',
+    description: 'Textos de botones y etiquetas que se repiten en todo el sitio.',
+    nested: 'uiLabels',
+    fields: [
+      { key: 'consultar', label: 'Etiqueta de precio en tarjetas', placeholder: 'Consultar' },
+      { key: 'cotizar', label: 'Botón Cotizar', placeholder: 'Cotizar' },
+      { key: 'verModelo', label: 'Botón Ver modelo', placeholder: 'Ver modelo' },
+      { key: 'cotizaCta', label: 'CTA principal (hero)', placeholder: 'COTIZA TU QINGLING' },
+    ],
+  },
 ];
 
 function FieldInput({ field, value, onChange }) {
@@ -141,6 +154,10 @@ export default function SiteConfigManager() {
 
   const handleChange = (key, value) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleNestedChange = (parent, key, value) => {
+    setConfig((prev) => ({ ...prev, [parent]: { ...(prev[parent] || {}), [key]: value } }));
   };
 
   const handleSave = async () => {
@@ -259,8 +276,8 @@ export default function SiteConfigManager() {
                     <FieldInput
                       key={field.key}
                       field={field}
-                      value={config[field.key]}
-                      onChange={handleChange}
+                      value={section.nested ? config[section.nested]?.[field.key] : config[field.key]}
+                      onChange={section.nested ? (k, v) => handleNestedChange(section.nested, k, v) : handleChange}
                     />
                   ))}
                 </div>
@@ -268,6 +285,34 @@ export default function SiteConfigManager() {
             </div>
           );
         })}
+      </div>
+
+      {/* Presence map countries editor */}
+      <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: '8px', overflow: 'hidden', marginTop: '12px' }}>
+        <div style={{ padding: '16px 20px', background: '#f9f9f9', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <MapPin size={20} color="var(--primary)" />
+          <div>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Mapa de presencia — Países
+            </h3>
+            <small style={{ color: 'var(--grey-text)', fontSize: '12px' }}>
+              Un país por línea, en inglés (deben coincidir con el mapa). Ecuador se resalta automáticamente.
+            </small>
+          </div>
+        </div>
+        <div style={{ padding: '20px', borderTop: '1px solid #e0e0e0' }}>
+          <textarea
+            className="custom-form-input"
+            value={(config.presenceCountries || []).join('\n')}
+            onChange={(e) => handleChange('presenceCountries', e.target.value.split('\n').map((s) => s.trim()).filter(Boolean))}
+            rows={10}
+            placeholder={'Ecuador\nColombia\nPeru\n...'}
+            style={{ fontFamily: 'monospace', resize: 'vertical', width: '100%' }}
+          />
+          <small style={{ color: 'var(--grey-text)', fontSize: '12px' }}>
+            {(config.presenceCountries || []).length} países
+          </small>
+        </div>
       </div>
 
       <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>

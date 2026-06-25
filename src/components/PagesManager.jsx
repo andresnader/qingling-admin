@@ -1,6 +1,37 @@
 import { useState, useEffect } from 'react';
 import { getPages, updatePage } from '../api';
 
+// Editable copy blocks per page (keys must match the frontend's fallback keys).
+const BLOCK_DEFS = {
+  home: [
+    { key: 'introBadge', label: 'Intro — Badge' },
+    { key: 'introLead', label: 'Intro — Titular' },
+    { key: 'introP1', label: 'Intro — Párrafo 1', multiline: true },
+    { key: 'introP2', label: 'Intro — Párrafo 2', multiline: true },
+    { key: 'cardTitle', label: 'Tarjeta interior — Título' },
+    { key: 'cardDesc', label: 'Tarjeta interior — Descripción', multiline: true },
+    { key: 'modelsHeading', label: 'Encabezado de modelos' },
+  ],
+  nosotros: [
+    { key: 'cardTitle', label: 'Tarjeta CORASA — Título' },
+    { key: 'cardSubtitle', label: 'Tarjeta CORASA — Subtítulo' },
+    { key: 'cardLead', label: 'Tarjeta CORASA — Texto', multiline: true },
+    { key: 'bullet1Title', label: 'Bullet 1 — Título' },
+    { key: 'bullet1Desc', label: 'Bullet 1 — Texto', multiline: true },
+    { key: 'bullet2Title', label: 'Bullet 2 — Título' },
+    { key: 'bullet2Desc', label: 'Bullet 2 — Texto', multiline: true },
+    { key: 'bullet3Title', label: 'Bullet 3 — Título' },
+    { key: 'bullet3Desc', label: 'Bullet 3 — Texto', multiline: true },
+    { key: 'porQueTitle', label: 'Por qué CORASA — Título' },
+    { key: 'porQueSubtitle', label: 'Por qué CORASA — Subtítulo' },
+    { key: 'porQueP1', label: 'Por qué CORASA — Párrafo 1', multiline: true },
+    { key: 'porQueP2', label: 'Por qué CORASA — Párrafo 2', multiline: true },
+    { key: 'porQueP3', label: 'Por qué CORASA — Párrafo 3', multiline: true },
+    { key: 'presenceTitle', label: 'Mapa de presencia — Título' },
+    { key: 'presenceSubtitle', label: 'Mapa de presencia — Subtítulo', multiline: true },
+  ],
+};
+
 function PagesManager() {
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +44,8 @@ function PagesManager() {
     ctaLink: '',
     heroPosition: 'center-center',
     content: '',
-    heroImage: ''
+    heroImage: '',
+    blocks: {}
   });
   const [saving, setSaving] = useState(false);
 
@@ -55,7 +87,8 @@ function PagesManager() {
       ctaLink: page.ctaLink || '',
       heroPosition: page.heroPosition || 'center-center',
       content: page.content || '',
-      heroImage: page.heroImage || ''
+      heroImage: page.heroImage || '',
+      blocks: page.blocks || {}
     });
   };
 
@@ -67,7 +100,7 @@ function PagesManager() {
       await updatePage(editingPage.slug, formData);
       await loadPages();
       setEditingPage(null);
-      setFormData({ title: '', subtitle: '', ctaText: '', ctaLink: '', heroPosition: 'center-center', content: '', heroImage: '' });
+      setFormData({ title: '', subtitle: '', ctaText: '', ctaLink: '', heroPosition: 'center-center', content: '', heroImage: '', blocks: {} });
     } catch (err) {
       setError(err.response?.data?.error || 'Error al guardar');
     } finally {
@@ -77,7 +110,7 @@ function PagesManager() {
 
   const resetForm = () => {
     setEditingPage(null);
-    setFormData({ title: '', subtitle: '', ctaText: '', ctaLink: '', heroPosition: 'center-center', content: '', heroImage: '' });
+    setFormData({ title: '', subtitle: '', ctaText: '', ctaLink: '', heroPosition: 'center-center', content: '', heroImage: '', blocks: {} });
   };
 
   const getPageLabel = (slug) => {
@@ -171,12 +204,36 @@ function PagesManager() {
                   />
                 </div>
               </div>
+              {BLOCK_DEFS[editingPage.slug] && (
+                <div className="form-group full">
+                  <h4 style={{ margin: '8px 0 4px' }}>Textos de la página</h4>
+                  {BLOCK_DEFS[editingPage.slug].map((field) => (
+                    <div className="form-group full" key={field.key}>
+                      <label>{field.label}</label>
+                      {field.multiline ? (
+                        <textarea
+                          value={formData.blocks?.[field.key] || ''}
+                          onChange={e => setFormData(prev => ({ ...prev, blocks: { ...prev.blocks, [field.key]: e.target.value } }))}
+                          rows={3}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={formData.blocks?.[field.key] || ''}
+                          onChange={e => setFormData(prev => ({ ...prev, blocks: { ...prev.blocks, [field.key]: e.target.value } }))}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="form-group full">
-                <label>Contenido (HTML)</label>
+                <label>Contenido (HTML) — opcional</label>
                 <textarea
                   value={formData.content}
                   onChange={e => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                  rows={12}
+                  rows={6}
                   className="content-editor"
                   placeholder="Contenido HTML de la página..."
                 />
