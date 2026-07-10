@@ -44,4 +44,8 @@ export const getPages = () => api.get('/pages').then(r => r.data.pages || []);
 export const getPage = (slug) => api.get(`/pages/${slug}`).then(r => r.data.page);
 export const updatePage = (slug, data) => api.put(`/pages/${slug}`, data).then(r => r.data.page);
 
+export const getToken = () => localStorage.getItem('token');
+export const getSiteConfig = () => api.get('/site-config').then(r => r.data.config);
+export const updateSiteConfig = (data) => api.put('/site-config', data).then(r => r.data.config);
+
 export default api;

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { login, logout, getUser, isAuthenticated } from './api';
 import TrucksManager from './components/TrucksManager';
 import PagesManager from './components/PagesManager';
+import SiteConfigManager from './components/SiteConfigManager';
+import { Truck, FileText, Settings } from 'lucide-react';
 
 function App() {
   const [user, setUser] = useState(() => isAuthenticated() ? getUser() : null);
@@ -94,19 +96,29 @@ function App() {
           className={`nav-btn ${activeTab === 'trucks' ? 'active' : ''}`}
           onClick={() => setActiveTab('trucks')}
         >
+          <Truck size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
           Camiones
         </button>
         <button
           className={`nav-btn ${activeTab === 'pages' ? 'active' : ''}`}
           onClick={() => setActiveTab('pages')}
         >
+          <FileText size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
           Contenido
+        </button>
+        <button
+          className={`nav-btn ${activeTab === 'config' ? 'active' : ''}`}
+          onClick={() => setActiveTab('config')}
+        >
+          <Settings size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+          Configuración
         </button>
       </nav>
 
       <main className="admin-main">
         {activeTab === 'trucks' && <TrucksManager />}
         {activeTab === 'pages' && <PagesManager />}
+        {activeTab === 'config' && <SiteConfigManager />}
       </main>
     </div>
   );

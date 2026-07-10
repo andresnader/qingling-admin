@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, Phone, MapPin, MessageCircle, Mail, Clock, Share2, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Save, Phone, MessageCircle, Mail, Clock, Share2, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { getSiteConfig, updateSiteConfig } from '../api';
 
 const SECTIONS = [
