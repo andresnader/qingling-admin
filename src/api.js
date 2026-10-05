@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://qingling-api-production.up.railway.app';
+// Sin barra final: si VITE_API_URL trae una (p. ej. "https://api.foo.com/"), al pegarle
+// "/api" queda "...com//api" — doble barra que ninguna ruta del servidor reconoce y que
+// el admin mostraba como "Resource not found" en vez de un error de login real.
+const API_URL = (import.meta.env.VITE_API_URL || 'https://qingling-api-production.up.railway.app').replace(/\/+$/, '');
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
