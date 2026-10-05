@@ -3,7 +3,8 @@ import { login, logout, getUser, isAuthenticated } from './api';
 import TrucksManager from './components/TrucksManager';
 import PagesManager from './components/PagesManager';
 import SiteConfigManager from './components/SiteConfigManager';
-import { Truck, FileText, Settings } from 'lucide-react';
+import ChangePasswordModal from './components/ChangePasswordModal';
+import { Truck, FileText, Settings, KeyRound } from 'lucide-react';
 
 function App() {
   const [user, setUser] = useState(() => isAuthenticated() ? getUser() : null);
@@ -12,6 +13,7 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('trucks');
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -87,9 +89,21 @@ function App() {
         </div>
         <div className="header-right">
           <span className="user-email">{user.email}</span>
+          <button
+            onClick={() => setShowChangePassword(true)}
+            className="logout-btn"
+            title="Cambiar contraseña"
+          >
+            <KeyRound size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+            Contraseña
+          </button>
           <button onClick={handleLogout} className="logout-btn">Cerrar Sesión</button>
         </div>
       </header>
+
+      {showChangePassword && (
+        <ChangePasswordModal onClose={() => setShowChangePassword(false)} />
+      )}
 
       <nav className="admin-nav">
         <button
