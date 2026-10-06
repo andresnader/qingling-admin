@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getTrucks, createTruck, updateTruck, deleteTruck } from '../api';
+import ImageUploadField from './ImageUploadField';
 
 const emptyTruck = {
   name: '',
@@ -181,15 +182,13 @@ function TrucksManager() {
                     <option value="ESPECIAL">Especiales</option>
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>URL Imagen principal</label>
-                  <input
-                    type="url"
-                    value={formData.image}
-                    onChange={e => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                    placeholder="https://..."
-                  />
-                </div>
+                <ImageUploadField
+                  label="Imagen principal"
+                  value={formData.image}
+                  onChange={(url) => setFormData(prev => ({ ...prev, image: url }))}
+                  folder="camiones"
+                  placeholder="https://... o subí un archivo"
+                />
                 <div className="form-group">
                   <label>Destacado</label>
                   <select

@@ -201,7 +201,7 @@ export default function SiteConfigManager() {
           disabled={!hasChanges || saving}
           style={{
             padding: '12px 24px',
-            background: hasChanges ? 'var(--primary)' : '#cccccc',
+            background: hasChanges ? 'var(--accent)' : '#cccccc',
             color: '#fff',
             border: 'none',
             borderRadius: '6px',
@@ -338,7 +338,7 @@ export default function SiteConfigManager() {
           disabled={!hasChanges || saving}
           style={{
             padding: '12px 24px',
-            background: hasChanges ? 'var(--primary)' : '#cccccc',
+            background: hasChanges ? 'var(--accent)' : '#cccccc',
             color: '#fff',
             border: 'none',
             borderRadius: '6px',

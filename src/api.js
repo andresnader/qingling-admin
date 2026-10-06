@@ -54,4 +54,26 @@ export const getToken = () => localStorage.getItem('token');
 export const getSiteConfig = () => api.get('/site-config').then(r => r.data.config);
 export const updateSiteConfig = (data) => api.put('/site-config', data).then(r => r.data.config);
 
+// Multimedia (Bucket S3 vía /api/media) — ver mediaController.js en qingling-api.
+export const getMedia = (folder, page = 1, limit = 24) =>
+  api.get('/media', { params: { folder: folder || undefined, page, limit } }).then(r => r.data);
+
+export const uploadMedia = (file, { folder = 'general', alt = '' } = {}, onProgress) => {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('folder', folder);
+  form.append('alt', alt);
+  return api
+    .post('/media', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: onProgress
+        ? (evt) => onProgress(evt.total ? Math.round((evt.loaded / evt.total) * 100) : 0)
+        : undefined,
+    })
+    .then(r => r.data.media);
+};
+
+export const updateMedia = (id, data) => api.put(`/media/${id}`, data).then(r => r.data.media);
+export const deleteMedia = (id) => api.delete(`/media/${id}`).then(r => r.data);
+
 export default api;

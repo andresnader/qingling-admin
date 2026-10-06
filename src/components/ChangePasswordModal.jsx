@@ -54,7 +54,7 @@ function ChangePasswordModal({ onClose }) {
 
         {success ? (
           <div>
-            <p style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>
+            <p style={{ color: 'var(--accent)', marginBottom: '1.5rem' }}>
               Contraseña actualizada. Úsala la próxima vez que inicies sesión.
             </p>
             <button type="button" onClick={onClose}>Cerrar</button>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPages, updatePage } from '../api';
+import ImageUploadField from './ImageUploadField';
 
 // Editable copy blocks per page (keys must match the frontend's fallback keys).
 const BLOCK_DEFS = {
@@ -194,15 +195,13 @@ function PagesManager() {
                     ))}
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>URL de Imagen Hero</label>
-                  <input
-                    type="text"
-                    value={formData.heroImage}
-                    onChange={e => setFormData(prev => ({ ...prev, heroImage: e.target.value }))}
-                    placeholder="/images/camion-hero.webp"
-                  />
-                </div>
+                <ImageUploadField
+                  label="Imagen hero"
+                  value={formData.heroImage}
+                  onChange={(url) => setFormData(prev => ({ ...prev, heroImage: url }))}
+                  folder="paginas"
+                  placeholder="/images/camion-hero.webp o subí un archivo"
+                />
               </div>
               {BLOCK_DEFS[editingPage.slug] && (
                 <div className="form-group full">
