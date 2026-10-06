@@ -77,3 +77,14 @@ export const updateMedia = (id, data) => api.put(`/media/${id}`, data).then(r =>
 export const deleteMedia = (id) => api.delete(`/media/${id}`).then(r => r.data);
 
 export default api;
+
+export const getFormDefinitions = () => api.get('/forms/definitions').then(r => r.data.forms || []);
+export const createFormDefinition = (data) => api.post('/forms/definitions', data).then(r => r.data.form);
+export const updateFormDefinition = (slug, data) => api.put(`/forms/definitions/${encodeURIComponent(slug)}`, data).then(r => r.data.form);
+export const deleteFormDefinition = (slug) => api.delete(`/forms/definitions/${encodeURIComponent(slug)}`).then(r => r.data);
+export const getSubmissions = (params) => api.get('/forms/submissions', { params }).then(r => r.data);
+export const markSubmissionRead = (id, read) => api.patch(`/forms/submissions/${encodeURIComponent(id)}/read`, { read }).then(r => r.data);
+export const apiErrorMessage = (err, fallback) => {
+  const error = err.response?.data?.error;
+  return typeof error === 'string' ? error : error?.message || fallback;
+};

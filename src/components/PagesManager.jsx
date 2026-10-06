@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getPages, updatePage } from '../api';
+import { getPages, updatePage, apiErrorMessage } from '../api';
+import HeroSlidesEditor from './HeroSlidesEditor';
 import ImageUploadField from './ImageUploadField';
 
 // Editable copy blocks per page (keys must match the frontend's fallback keys).
@@ -103,7 +104,7 @@ function PagesManager() {
       setEditingPage(null);
       setFormData({ title: '', subtitle: '', ctaText: '', ctaLink: '', heroPosition: 'center-center', content: '', heroImage: '', blocks: {} });
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al guardar');
+      setError(apiErrorMessage(err, 'Error al guardar'));
     } finally {
       setSaving(false);
     }
@@ -133,7 +134,7 @@ function PagesManager() {
         <h2>Contenido de Página</h2>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && !editingPage && <div className="error-message" role="alert">{error}</div>}
 
       {editingPage ? (
         <div className="form-modal">
@@ -143,6 +144,7 @@ function PagesManager() {
               <button onClick={resetForm} className="close-btn">×</button>
             </div>
             <form onSubmit={handleSubmit}>
+              {error && <div className="error-message" role="alert">{error}</div>}
               <div className="form-row">
                 <div className="form-group">
                   <label> Título Principal</label>
@@ -227,6 +229,10 @@ function PagesManager() {
                 </div>
               )}
 
+              {editingPage.slug === 'home' && <>
+                <HeroSlidesEditor key="hero" title="Slideshow del inicio" folder="home-slideshow" value={formData.blocks.heroSlides} onChange={heroSlides => setFormData(prev => ({ ...prev, blocks: { ...prev.blocks, heroSlides } }))} />
+                <HeroSlidesEditor key="collage" title="Collage del inicio" folder="home-collage" value={formData.blocks.homeCollage} onChange={homeCollage => setFormData(prev => ({ ...prev, blocks: { ...prev.blocks, homeCollage } }))} />
+              </>}
               <div className="form-group full">
                 <label>Contenido (HTML) — opcional</label>
                 <textarea

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { uploadMedia } from '../api';
+import MediaPicker from './MediaPicker';
 import { Upload, Loader2 } from 'lucide-react';
 
 // Campo de imagen con dos caminos: pegar una URL a mano (como antes) o subir un
 // archivo directo, que lo manda a /api/media (Bucket S3) y llena el campo solo.
 function ImageUploadField({ label, value, onChange, folder = 'general', placeholder }) {
+  const [picking, setPicking] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
@@ -40,10 +42,12 @@ function ImageUploadField({ label, value, onChange, folder = 'general', placehol
           <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} />
         </label>
       </div>
+      <button type="button" className="cancel-btn" onClick={() => setPicking(!picking)}>Elegir de Multimedia</button>
+      {picking && <MediaPicker onClose={() => setPicking(false)} onSelect={item => { onChange(item.url); setPicking(false); }} />}
       {error && <small style={{ color: 'var(--danger)' }}>{error}</small>}
       {value && (
         <div className="image-field-preview">
-          <img src={value} alt="" onError={(e) => { e.target.style.display = 'none'; }} />
+          <img key={value} src={value} alt="" onError={(e) => { e.target.style.display = 'none'; }} />
         </div>
       )}
     </div>

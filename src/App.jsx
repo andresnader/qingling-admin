@@ -23,9 +23,10 @@ import { login, logout, getUser, isAuthenticated } from './api';
 import TrucksManager from './components/TrucksManager';
 import PagesManager from './components/PagesManager';
 import SiteConfigManager from './components/SiteConfigManager';
+import LeadsManager from './components/LeadsManager';
 import MediaManager from './components/MediaManager';
 import ChangePasswordModal from './components/ChangePasswordModal';
-import { Truck, FileText, Settings, KeyRound, Images } from 'lucide-react';
+import { Truck, FileText, Settings, KeyRound, Images, Inbox } from 'lucide-react';
 
 function App() {
   const [user, setUser] = useState(() => isAuthenticated() ? getUser() : null);
@@ -163,12 +164,14 @@ function App() {
           <Settings size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
           Configuración
         </button>
+        {user.role === 'ADMIN' && <button className={`nav-btn ${activeTab === 'leads' ? 'active' : ''}`} onClick={() => setActiveTab('leads')}><Inbox size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />Leads</button>}
       </nav>
 
       <main className="admin-main">
         {activeTab === 'trucks' && <TrucksManager />}
         {activeTab === 'pages' && <PagesManager />}
         {activeTab === 'media' && <MediaManager />}
+        {activeTab === 'leads' && user.role === 'ADMIN' && <LeadsManager />}
         {activeTab === 'config' && <SiteConfigManager />}
       </main>
     </div>
