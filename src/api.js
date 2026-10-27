@@ -18,6 +18,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Token vencido (el JWT dura 24 h) o inválido: la API responde 401 en cada pestaña del panel. Sin esto el admin
+// seguía "logueado" con el token viejo y mostraba errores sueltos; ahora cierra la sesión y avisa a App.
+export const SESSION_EXPIRED_EVENT = 'qingling:session-expired';
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const isLoginRequest = error.config?.url?.includes('/auth/login');
+    if (error.response?.status === 401 && !isLoginRequest && localStorage.getItem('token')) {
+      logout();
+      window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const login = async (email, password) => {
   const { data } = await api.post('/auth/login', { email, password });
   localStorage.setItem('token', data.token);

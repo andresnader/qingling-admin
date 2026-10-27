@@ -18,8 +18,8 @@
     finish review, the verdict, DESIGN.md, and every shipping raster carrying
     its provenance.
 */
-import { useState } from 'react';
-import { login, logout, getUser, isAuthenticated } from './api';
+import { useState, useEffect } from 'react';
+import { login, logout, getUser, isAuthenticated, SESSION_EXPIRED_EVENT } from './api';
 import TrucksManager from './components/TrucksManager';
 import PagesManager from './components/PagesManager';
 import SiteConfigManager from './components/SiteConfigManager';
@@ -36,6 +36,16 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('trucks');
   const [showChangePassword, setShowChangePassword] = useState(false);
+
+  useEffect(() => {
+    const onExpired = () => {
+      setUser(null);
+      setPassword('');
+      setError('Tu sesión venció. Entrá de nuevo para seguir.');
+    };
+    window.addEventListener(SESSION_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
